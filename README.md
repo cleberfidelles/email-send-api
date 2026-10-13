@@ -4,18 +4,11 @@ API REST (Spring Boot) para envio **assíncrono** de e-mails, usando Kafka e MyS
 
 ## Como funciona
 
-```
-POST /email ──► salva PENDENTE no MySQL ──► publica o id no Kafka ──► 202 + Location
-                                                     │
-                                          EmailConsumer (SMTP)
-                                 ┌───────────────────┴───────────────────┐
-                           sucesso: ENVIADO                    falha: retry (2s, 4s, 8s)
-                                                                          │
-                                                          esgotou ──► tópico email-envio.DLT
-                                                                          │
-                                                                  EmailDeadLetterConsumer ──► ERRO
-GET /email/{id} ──► consulta o status (PENDENTE | ENVIADO | ERRO)
-```
+<p align="center">
+ <img src="https://github.com/user-attachments/assets/124fd493-017f-4166-bf88-66ed53002a0f" alt="Image" width="800" />
+
+</p>
+
 
 Se o Kafka estiver fora na hora do POST, o e-mail é marcado como `ERRO` em vez de ficar `PENDENTE` para sempre.
 
